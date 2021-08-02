@@ -25,6 +25,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         });
         db.run(`CREATE TABLE note (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name text,
             note text,
             email text,
             phoneNumber text,

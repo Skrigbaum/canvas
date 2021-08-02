@@ -4,14 +4,11 @@ const app = express();
 var db = require("./database.js")
 const port = process.env.PORT || 5000;
 
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 // This displays message that the server running and listening to specified port
 app.listen(port, () => console.log(`Listening on port ${port}`));
-
-// create a GET route
-app.get('/express_backend', (req, res) => { 
-  res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
-}); 
-
 
 app.get("/api/note/:id", (req, res, next) => {
     var sql = "select * from note where id = ?"
@@ -28,21 +25,36 @@ app.get("/api/note/:id", (req, res, next) => {
       });
 });
 
-app.get("/api/users", (req, res, next) => {
-    var sql = "select * from user"
+app.post("/api/note", (req, res, next) => {
+    var errors=[]
+    if (!req.body.name){
+        errors.push("No name specified");
+    }
+    if (errors.length){
+        res.status(400).json({"error":errors.join(",")});
+        return;
+    }
+    var data = {
+        name: req.body.name,
+        note: req.body.note,
+        email: req.body.email,
+        phoneNumber: req.body.phone,
+        userID: req.body.userId,
+    }
+    var sql ='INSERT INTO note (name, note, email, phoneNumber, userID) VALUES (?, ?, ?, ?, ?)'
     var params = [req.params.id]
-    db.get(sql, params, (err, row) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
+    db.run(sql, params, function (err, result) {
+        if (err){
+            res.status(400).json({"error": err.message})
+            return;
         }
         res.json({
-            "message":"success",
-            "data":row
+            "message": "success",
+            "data": data,
+            "id" : this.lastID
         })
-      });
+    });
 });
-
 
 app.post('/api/user', (req, res, next) => {
     var data = {
@@ -62,3 +74,20 @@ app.post('/api/user', (req, res, next) => {
         })
     });
 })
+
+
+app.get("/api/users", (req, res, next) => {
+    var sql = "select * from user"
+    var params = [req.params.id]
+    db.get(sql, params, (err, row) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "message":"success",
+            "data":row
+        })
+      });
+});
+
