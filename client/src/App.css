@@ -1,0 +1,12 @@
+label {
+  margin: 15px;
+  display: flex;
+}
+
+input, textarea {
+  margin-left : 15px;
+}
+
+h1, h2 {
+  margin-left: 15px;
+}
