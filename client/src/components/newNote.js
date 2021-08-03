@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './Note.css';
 
 class NewNote extends React.Component {
     constructor(props) {
       super(props);
-
+      console.log(this.props)
       this.state = {
-        userID: '',
+        userID: this.props.userID,
         userName: '',
-        name: 'Test',
+        name: '',
         email: '',
         phone: '',
-        note: 'Best Note ever',
+        note: '',
         listView: 'false'
       };
 
@@ -24,12 +24,30 @@ class NewNote extends React.Component {
       }
     
       handleSubmit(event) {
-        alert('A name was submitted: ' + this.state.name);
-        this.saveNote(event)
-        event.preventDefault();
+        let formIsValid = true;
+        let errors = [];
+
+        var fields = this.state
+         //Email
+       if(fields["email"] !== "undefined"){
+          let lastAtPos = fields["email"].lastIndexOf('@');
+          let lastDotPos = fields["email"].lastIndexOf('.');
+
+          if (!(lastAtPos < lastDotPos && lastAtPos > 0 && fields["email"].indexOf('@@') === -1 && lastDotPos > 2 && (fields["email"].length - lastDotPos) > 2)) {
+             formIsValid = false;
+             errors.push("Email is not valid");
+           }
+        }
+
+        if (!formIsValid) {
+          alert(`Errors: ${errors}`)
+        } else {
+          this.saveNote(event)
+          event.preventDefault();
+        }
       }
     
-      saveNote = async (event) => {
+      saveNote = async () => {
         //circumventing the form passed data
         let noteToSave = {
           name: this.state.name,

@@ -10,3 +10,7 @@ label {
   h1, h2, button {
     margin-left: 15px;
   }
+
+  button {
+    margin-right: 10px;
+  }

@@ -38,8 +38,8 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
                 // Table already created
             }else{
                 // Table just created, creating some rows
-                var insert = 'INSERT INTO note (note, userID) VALUES (?, ?)'
-                db.run(insert, ["TEST NOTE", 1])
+                var insert = 'INSERT INTO note (note, name, email, phoneNumber, userID) VALUES (?, ?, ?, ?, ?)'
+                db.run(insert, ["TEST NOTE", "Test Name", "FakeEmail@fake.com", "555-555-5555",  1])
             }
         });    
     }

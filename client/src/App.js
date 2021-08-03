@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
 import NewNote from "./components/newNote"
 import NoteList from "./components/noteList"
@@ -18,7 +18,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.callBackendAPI()
-      .then(res => this.setState({ userName: res.data.name, userId: res.data.id }))
+      .then(res => this.setState({ userName: res.data.name, userID: res.data.id }))
       .catch(err => console.log(err));
   }
 
@@ -51,7 +51,7 @@ class App extends React.Component {
           <h2 className="App-Subtitle">Welcome {this.state.userName}</h2>
           <button onClick={this.handleToggleClick}>{listView ? "Note List" : "Add new Note"}</button>
         </header>
-        {listView ? <NewNote /> : <NoteList />}
+        {listView ? <NewNote userID={this.state.userID} /> : <NoteList userID={this.state.userID} />}
       </div>
     );
   }

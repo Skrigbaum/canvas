@@ -25,6 +25,21 @@ app.get("/api/note/:id", (req, res, next) => {
       });
 });
 
+app.get("/api/notes/:id", (req, res, next) => {
+    var sql = "select * from note where userID = ?"
+    var params = [req.params.id]
+    db.all(sql, params, (err, row) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "message":"success",
+            "data":row
+        })
+      });
+});
+
 app.post("/api/note", (req, res, next) => {
     var errors=[]
     if (!req.body.name){
@@ -42,7 +57,7 @@ app.post("/api/note", (req, res, next) => {
         userID: req.body.userId,
     }
     var sql ='INSERT INTO note (name, note, email, phoneNumber, userID) VALUES (?, ?, ?, ?, ?)'
-    var params = [req.params.id]
+    var params = [data.name, data.note, data.email, data.phoneNumber, data.userID]
     db.run(sql, params, function (err, result) {
         if (err){
             res.status(400).json({"error": err.message})
